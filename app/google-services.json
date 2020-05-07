@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "184174357057",
+    "firebase_url": "https://memoria-5e59c.firebaseio.com",
+    "project_id": "memoria-5e59c",
+    "storage_bucket": "memoria-5e59c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184174357057:android:36cf72241c8cedf508b4c0",
+        "android_client_info": {
+          "package_name": "com.example.memoria"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184174357057-03fvs6eo6qibchbm2o5qhlvuhtk8i17f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCthlAHs7wEvfx8s-eaqDJclGhalNdF9Xc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "184174357057-03fvs6eo6qibchbm2o5qhlvuhtk8i17f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

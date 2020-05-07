@@ -77,7 +77,6 @@
             android:drawableStart="@drawable/ic_password"
             android:drawableLeft="@drawable/ic_password"
             android:drawablePadding="16dp"
-            android:fontFamily="@font/pacifico"
             android:hint="@string/passwordHint"
             android:includeFontPadding="false"
             android:inputType="textPassword"
