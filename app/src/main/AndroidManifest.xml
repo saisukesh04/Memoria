@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".signup.SettingsActivity" />
+        <activity android:name=".signup.RegisterActivity" />
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".MainActivity"
