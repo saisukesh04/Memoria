@@ -12,4 +12,16 @@
     <string name="menu_slideshow">Slideshow</string>
 
     <string name="home_second">Home Second</string>
+
+    <string name="loginText">Login</string>
+    <string name="usernameHint">Username</string>
+    <string name="passwordHint">Password</string>
+    <string name="login_btn">Login</string>
+    <string name="sign_up_btn_text">Don\'t have an account</string>
+
+    <string name="register">Register</string>
+    <string name="reEnterPasswordHint">Confirm Password</string>
+    <string name="already_have_an_account">Already have an account</string>
+    <string name="sign_up_btn">Sign Up</string>
+
 </resources>
