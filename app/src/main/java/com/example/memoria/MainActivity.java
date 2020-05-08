@@ -1,7 +1,10 @@
 package com.example.memoria;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -13,6 +16,11 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
@@ -23,10 +31,19 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private FirebaseAuth mAuth;
+    private DatabaseReference mRef;
+    public static String userId = null;
+    public static String userName;
+    public static String mainProfileImage;
+    public static Uri mainImageURI = null;
+
+    private ProgressDialog loadingProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+        loadingProgress = new ProgressDialog(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -92,11 +110,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        loadingProgress.setMessage("Loading...");
+        loadingProgress.show();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        mRef = FirebaseDatabase.getInstance().getReference();
+
         if (currentUser == null) {
             sendToLogin();
+            loadingProgress.dismiss();
+        }else if(userName != null){
+            loadingProgress.dismiss();
         }else{
-            Toast.makeText(this, "Signed-in as", Toast.LENGTH_LONG).show();
+            userId = mAuth.getCurrentUser().getUid();
+
+            mRef.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.hasChild(userId)){
+
+                        Map<String,String> retrieveMap = (Map<String, String>) dataSnapshot.child(userId).getValue();
+                        mainProfileImage = retrieveMap.get("Image");
+                        mainImageURI = Uri.parse(mainProfileImage);
+                        userName = retrieveMap.get("Name");
+
+                        Log.i("MainActivity:", "retrieval successful");
+                        loadingProgress.dismiss();
+                        Toast.makeText(MainActivity.this, "Signed-in as " + userName, Toast.LENGTH_LONG).show();
+                    }else{
+                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(MainActivity.this,"Error" + databaseError,Toast.LENGTH_SHORT).show();
+                    loadingProgress.dismiss();
+                }
+            });
         }
     }
 

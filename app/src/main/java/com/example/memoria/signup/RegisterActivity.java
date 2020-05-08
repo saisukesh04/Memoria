@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
-import com.example.memoria.MainActivity;
 import com.example.memoria.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -59,8 +58,8 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Log.i("RegisterActivity: ", "createUserWithEmail : success");
-                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                Log.i("RegisterActivity", "createUserWithEmail : success");
+                                startActivity(new Intent(RegisterActivity.this, SettingsActivity.class));
                             } else {
                                 Log.e("RegisterActivity", "createUserWithEmail : failure", task.getException());
                                 Snackbar.make(v, "Authentication failed. \n" + task.getException(), Snackbar.LENGTH_LONG).show();

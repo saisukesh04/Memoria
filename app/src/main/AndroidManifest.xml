@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".signup.SettingsActivity" />
+        <activity android:name=".signup.SettingsActivity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".signup.RegisterActivity" />
         <activity android:name=".LoginActivity"
             android:windowSoftInputMode="stateHidden"/>
@@ -27,6 +28,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
     </application>
 
 </manifest>
