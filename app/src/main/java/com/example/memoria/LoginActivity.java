@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.memoria.signup.RegisterActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,7 +24,7 @@ import butterknife.ButterKnife;
 
 public class LoginActivity extends AppCompatActivity {
 
-    @BindView(R.id.newAccountBtn) TextView newAccountBtn;
+    @BindView(R.id.newAccountBtn) Button newAccountBtn;
     @BindView(R.id.loginEmail) TextInputEditText loginEmail;
     @BindView(R.id.loginPassword) TextInputEditText loginPassword;
     @BindView(R.id.loginBtn) Button loginBtn;

@@ -18,7 +18,7 @@
     <string name="usernameHint">E-mail</string>
     <string name="passwordHint">Password</string>
     <string name="login_btn">Login</string>
-    <string name="sign_up_btn_text">Don\'t have an account</string>
+    <string name="sign_up_btn_text">New User?</string>
 
     <string name="register">Register</string>
     <string name="reEnterPasswordHint">Confirm Password</string>
