@@ -5,6 +5,7 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="menu_logout">Logout</string>
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
@@ -14,7 +15,7 @@
     <string name="home_second">Home Second</string>
 
     <string name="loginText">Login</string>
-    <string name="usernameHint">Username</string>
+    <string name="usernameHint">E-mail</string>
     <string name="passwordHint">Password</string>
     <string name="login_btn">Login</string>
     <string name="sign_up_btn_text">Don\'t have an account</string>
@@ -23,5 +24,7 @@
     <string name="reEnterPasswordHint">Confirm Password</string>
     <string name="already_have_an_account">Already have an account</string>
     <string name="sign_up_btn">Sign Up</string>
+    <string name="username">Username</string>
+    <string name="save_profile">Save Profile</string>
 
 </resources>

@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    @BindView(R.id.regUsername) TextInputEditText regUsername;
+    @BindView(R.id.regEmail) TextInputEditText regEmail;
     @BindView(R.id.regPass) TextInputEditText regPass;
     @BindView(R.id.regConfPass) TextInputEditText regConfPass;
     @BindView(R.id.signUpBtn) Button signUpBtn;
@@ -46,16 +46,16 @@ public class RegisterActivity extends AppCompatActivity {
                 assert imm != null;
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
-                String username = regUsername.getText().toString();
+                String email = regEmail.getText().toString();
                 String pass = regPass.getText().toString();
                 String passConf = regConfPass.getText().toString();
 
-                if(TextUtils.isEmpty(username) || TextUtils.isEmpty(pass) || TextUtils.isEmpty(passConf)){
+                if(TextUtils.isEmpty(email) || TextUtils.isEmpty(pass) || TextUtils.isEmpty(passConf)){
                     Snackbar.make(v, "Please fill all entries", Snackbar.LENGTH_LONG).show();
                 }else if (!pass.equals(passConf)){
                     Snackbar.make(v, "Passwords do not match", Snackbar.LENGTH_LONG).show();
                 }else{
-                    mAuth.createUserWithEmailAndPassword(username, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
