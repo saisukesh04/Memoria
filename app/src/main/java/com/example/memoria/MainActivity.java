@@ -55,11 +55,11 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton addPostFAB = findViewById(R.id.addPostFAB);
-        addPostFAB.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton addMemoryFAB = findViewById(R.id.addMemoryFAB);
+        addMemoryFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, NewPostActivity.class));
+                startActivity(new Intent(MainActivity.this, NewMemoryActivity.class));
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

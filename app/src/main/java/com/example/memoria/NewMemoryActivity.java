@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class NewPostActivity extends AppCompatActivity {
+import butterknife.ButterKnife;
+
+public class NewMemoryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_post);
+        setContentView(R.layout.activity_new_memory);
+
+        ButterKnife.bind(this);
     }
 }

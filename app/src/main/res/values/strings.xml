@@ -27,4 +27,11 @@
     <string name="username">Username</string>
     <string name="save_profile">Save Profile</string>
 
+    <string name="new_memory_title">New Memory</string>
+    <string name="radiobutton1">Image Memory</string>
+    <string name="radiobutton2">Video Memory</string>
+    <string name="radiobutton3">Text Memory</string>
+    <string name="radiobutton4">Location Memory</string>
+    <string name="continue_btn_text">Continue</string>
+
 </resources>
