@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.i("InfoTest","onCreate");
-
         mAuth = FirebaseAuth.getInstance();
         loadingProgress = new ProgressDialog(this);
 
@@ -110,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.i("InfoTest","onStart");
 
         loadingProgress.setMessage("Loading...");
         loadingProgress.show();
