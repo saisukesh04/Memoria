@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -129,8 +128,6 @@ public class MainActivity extends AppCompatActivity {
                         mainProfileImage = retrieveMap.get("Image");
                         mainImageURI = Uri.parse(mainProfileImage);
                         userName = retrieveMap.get("Name");
-
-                        Log.i("MainActivity:", "retrieval successful");
                         loadingProgress.dismiss();
                     }else{
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));

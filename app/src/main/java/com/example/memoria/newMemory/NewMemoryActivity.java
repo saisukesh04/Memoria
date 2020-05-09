@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.memoria.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -38,9 +39,13 @@ public class NewMemoryActivity extends AppCompatActivity {
     @BindView(R.id.radioGroup) RadioGroup radioGroup;
     @BindView(R.id.newMemoryContinue) Button newMemoryContinue;
 
+    final static int IMAGE_CODE = 1;
+    final static int VIDEO_CODE = 2;
+    final static int AUDIO_CODE = 3;
+    final static int LOCATION_CODE = 4;
+
     private FirebaseStorage mStorage;
     private StorageReference storagePath;
-    private Uri videoUri;
     private ProgressDialog progressDialog;
 
     @Override
@@ -50,7 +55,7 @@ public class NewMemoryActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        mStorage= FirebaseStorage.getInstance();
+        mStorage = FirebaseStorage.getInstance();
         newMemoryContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,27 +63,54 @@ public class NewMemoryActivity extends AppCompatActivity {
                 if(ContextCompat.checkSelfPermission(NewMemoryActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(NewMemoryActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
                 }else{
-                    selectVideo();
+                    int selectedId = radioGroup.getCheckedRadioButtonId();
+                    if(selectedId == R.id.radioButton1){
+                        selectImage();
+                    }else if(selectedId == R.id.radioButton2){
+                        selectVideo();
+                    }else if(selectedId == R.id.radioButton3){
+                        Toast.makeText(NewMemoryActivity.this, "Page Under Construction", Toast.LENGTH_LONG).show();
+                    }else if(selectedId == R.id.radioButton4){
+                        Toast.makeText(NewMemoryActivity.this, "Page Under Construction", Toast.LENGTH_LONG).show();
+                    }else{
+                        Snackbar.make(v, "Please choose any one of the options", Snackbar.LENGTH_LONG).show();
+                    }
                 }
             }
         });
+    }
+
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMAGE_CODE);
     }
 
     private void selectVideo() {
         Intent intent = new Intent();
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, VIDEO_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            videoUri = data.getData();
-            Intent testIntent = new Intent(NewMemoryActivity.this, StoreMemory.class);
-            testIntent.putExtra("URI-vid", videoUri.toString());
-            startActivity(testIntent);
+
+        if (requestCode == IMAGE_CODE && resultCode == RESULT_OK && data != null) {
+            Uri imageUri = data.getData();
+            Intent intent = new Intent(NewMemoryActivity.this, StoreMemory.class);
+            intent.putExtra("URI", imageUri.toString());
+            intent.putExtra("type", IMAGE_CODE);
+            startActivity(intent);
+            //uploadUri(imageUri);
+        }else if (requestCode == VIDEO_CODE && resultCode == RESULT_OK && data != null) {
+            Uri videoUri = data.getData();
+            Intent intent = new Intent(NewMemoryActivity.this, StoreMemory.class);
+            intent.putExtra("URI", videoUri.toString());
+            intent.putExtra("type", VIDEO_CODE);
+            startActivity(intent);
             //uploadUri(videoUri);
         } else {
             Toast.makeText(NewMemoryActivity.this, "Please select a file", Toast.LENGTH_SHORT).show();
