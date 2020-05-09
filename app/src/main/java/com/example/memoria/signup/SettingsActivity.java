@@ -44,9 +44,9 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.memoria.MainActivity.mAuth;
 import static com.example.memoria.MainActivity.mainImageURI;
 import static com.example.memoria.MainActivity.mainProfileImage;
-import static com.example.memoria.MainActivity.userId;
 import static com.example.memoria.MainActivity.userName;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -58,6 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private StorageReference imagePath;
     private DatabaseReference mRef;
+    private String userId;
 
     private Uri downloadUrl;
     private String usernameText;
@@ -70,11 +71,15 @@ public class SettingsActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        Intent intent = getIntent();
+        boolean firstTime = intent.getBooleanExtra("firstTime", false);
+
         mRef = FirebaseDatabase.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
         savingProgress = new ProgressDialog(SettingsActivity.this);
+        userId = mAuth.getCurrentUser().getUid();
 
-        if(userName == null) {
+        if(userName == null || firstTime) {
             Toast.makeText(SettingsActivity.this, "Please complete the setup", Toast.LENGTH_SHORT).show();
         }else {
             username.setText(userName);

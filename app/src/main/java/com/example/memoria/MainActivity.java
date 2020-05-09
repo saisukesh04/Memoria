@@ -36,9 +36,9 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private FirebaseAuth mAuth;
+    public static FirebaseAuth mAuth;
     private DatabaseReference mRef;
-    public static String userId = null;
+    public String userId = null;
     public static String userName;
     public static String mainProfileImage;
     public static Uri mainImageURI = null;
@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.i("InfoTest","onCreate");
 
         mAuth = FirebaseAuth.getInstance();
         loadingProgress = new ProgressDialog(this);
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Log.i("InfoTest","onStart");
 
         loadingProgress.setMessage("Loading...");
         loadingProgress.show();
@@ -116,8 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (currentUser == null) {
             sendToLogin();
-            loadingProgress.dismiss();
-        }else if(userName != null){
             loadingProgress.dismiss();
         }else{
             userId = mAuth.getCurrentUser().getUid();
@@ -134,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.i("MainActivity:", "retrieval successful");
                         loadingProgress.dismiss();
-                        Toast.makeText(MainActivity.this, "Signed-in as " + userName, Toast.LENGTH_LONG).show();
                     }else{
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                     }
@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendToLogin() {
+        userName = null;
+        mainProfileImage = null;
         Intent loginIntent = new Intent(this, LoginActivity.class);
         startActivity(loginIntent);
         finish();

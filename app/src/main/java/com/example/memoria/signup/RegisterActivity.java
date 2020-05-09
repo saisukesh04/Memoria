@@ -59,7 +59,10 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 Log.i("RegisterActivity", "createUserWithEmail : success");
-                                startActivity(new Intent(RegisterActivity.this, SettingsActivity.class));
+                                Intent intent = new Intent(RegisterActivity.this, SettingsActivity.class);
+                                intent.putExtra("firstTime", true);
+                                startActivity(intent);
+                                finish();
                             } else {
                                 Log.e("RegisterActivity", "createUserWithEmail : failure", task.getException());
                                 Snackbar.make(v, "Authentication failed. \n" + task.getException(), Snackbar.LENGTH_LONG).show();
