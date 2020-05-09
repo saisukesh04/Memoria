@@ -30,8 +30,10 @@
     <string name="new_memory_title">New Memory</string>
     <string name="radiobutton1">Image Memory</string>
     <string name="radiobutton2">Video Memory</string>
-    <string name="radiobutton3">Text Memory</string>
+    <string name="radiobutton3">Audio Memory</string>
     <string name="radiobutton4">Location Memory</string>
     <string name="continue_btn_text">Continue</string>
+    <string name="add_description">Add Description....</string>
+    <string name="post_memory">Post Memory</string>
 
 </resources>

@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.Menu;
 import android.widget.Toast;
 
+import com.example.memoria.newMemory.NewMemoryActivity;
 import com.example.memoria.signup.SettingsActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

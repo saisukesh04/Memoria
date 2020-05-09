@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewMemoryActivity" />
+        <activity android:name=".newMemory.StoreMemory" />
+        <activity android:name=".newMemory.NewMemoryActivity" />
         <activity
             android:name=".signup.SettingsActivity"
             android:windowSoftInputMode="stateHidden" />
