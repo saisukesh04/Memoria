@@ -33,6 +33,7 @@
             android:text="@string/username"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
             app:layout_constraintStart_toEndOf="@+id/userProfileImage"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginLeft="16dp" />
@@ -45,6 +46,7 @@
             android:layout_marginTop="14dp"
             android:text="@string/upload_date"
             android:textSize="16sp"
+            android:textColor="@color/Black"
             app:layout_constraintStart_toEndOf="@+id/userProfileImage"
             app:layout_constraintTop_toBottomOf="@+id/username"
             android:layout_marginLeft="16dp" />
@@ -91,6 +93,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/default_text"
+            android:textColor="@color/Black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/memoryLayout" />
@@ -114,10 +117,41 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/default_likes"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/likeIcon"
             app:layout_constraintTop_toBottomOf="@+id/memoryDescription"
             android:layout_marginLeft="8dp" />
+
+        <LinearLayout
+            android:id="@+id/commentLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/memoryDescription"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/commentIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="8dp"
+            app:srcCompat="@drawable/ic_comment" />
+
+        <TextView
+            android:id="@+id/commentsCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/default_comments"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

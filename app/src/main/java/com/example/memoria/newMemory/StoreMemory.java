@@ -147,7 +147,7 @@ public class StoreMemory extends AppCompatActivity {
         exoPlayer = ExoPlayerFactory.newSimpleInstance(StoreMemory.this, trackSelector, loadControl);
         exoPlayerView.setPlayer(exoPlayer);
 
-        String userAgent = Util.getUserAgent(StoreMemory.this, "RecipeVideo");
+        String userAgent = Util.getUserAgent(StoreMemory.this, "MemoryVideo");
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(StoreMemory.this, userAgent);
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
         mediaSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
