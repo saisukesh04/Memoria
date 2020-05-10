@@ -25,7 +25,7 @@
             android:layout_marginLeft="16dp" />
 
         <TextView
-            android:id="@+id/blogUsername"
+            android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -38,7 +38,7 @@
             android:layout_marginLeft="16dp" />
 
         <TextView
-            android:id="@+id/blogDate"
+            android:id="@+id/uploadDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -46,26 +46,44 @@
             android:text="Upload Date"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/userProfileImage"
-            app:layout_constraintTop_toBottomOf="@+id/blogUsername"
+            app:layout_constraintTop_toBottomOf="@+id/username"
             android:layout_marginLeft="16dp" />
 
-        <ImageView
-            android:id="@+id/postImage"
+        <RelativeLayout
+            android:id="@+id/memoryLayout"
             android:layout_width="0dp"
             android:layout_height="200dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
             android:layout_marginStart="3dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="3dp"
-            android:background="#FFFFFF"
-            android:paddingTop="1dp"
-            android:paddingBottom="1dp"
-            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userProfileImage" />
+            app:layout_constraintTop_toBottomOf="@+id/userProfileImage">
 
+        <ImageView
+            android:id="@+id/memoryImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:visibility="gone"
+            android:scaleType="centerCrop" />
+
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/memoryVideo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="3dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:visibility="gone"/>
+
+        </RelativeLayout>
         <TextView
-            android:id="@+id/blogDesc"
+            android:id="@+id/memoryDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -74,7 +92,7 @@
             android:text="lorem ipsum dolor sit amet soluta regione urbanitas vis qui elit populo ut."
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/postImage" />
+            app:layout_constraintTop_toBottomOf="@+id/memoryLayout" />
 
         <ImageView
             android:id="@+id/likeIcon"
@@ -85,7 +103,7 @@
             android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/blogDesc"
+            app:layout_constraintTop_toBottomOf="@+id/memoryDescription"
             app:srcCompat="@drawable/like_icon_grey"
             android:layout_marginLeft="16dp" />
 
@@ -97,7 +115,7 @@
             android:text="0 Likes"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/likeIcon"
-            app:layout_constraintTop_toBottomOf="@+id/blogDesc"
+            app:layout_constraintTop_toBottomOf="@+id/memoryDescription"
             android:layout_marginLeft="8dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

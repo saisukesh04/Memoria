@@ -16,9 +16,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
+import android.widget.LinearLayout;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.memoria.MainActivity;
@@ -48,7 +47,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,7 +57,6 @@ import static com.example.memoria.newMemory.NewMemoryActivity.AUDIO_CODE;
 import static com.example.memoria.newMemory.NewMemoryActivity.IMAGE_CODE;
 import static com.example.memoria.newMemory.NewMemoryActivity.LOCATION_CODE;
 import static com.example.memoria.newMemory.NewMemoryActivity.VIDEO_CODE;
-import static java.security.AccessController.getContext;
 
 public class StoreMemory extends AppCompatActivity {
 
@@ -160,25 +157,20 @@ public class StoreMemory extends AppCompatActivity {
 
     private void uploadMemory(Uri uri) {
 
+        LinearLayout uploadProgress = findViewById(R.id.uploadProgress);
         String desc = memoryDesc.getText().toString();
 
         if(!TextUtils.isEmpty(desc)) {
-            //TODO: Add progress bar
+            uploadProgress.setVisibility(View.VISIBLE);
             String currentUNIX = String.valueOf(System.currentTimeMillis());
             storagePath = storageReference.child("Memories").child(userId + " " + currentUNIX);
             UploadTask uploadMemoryTask = storagePath.putFile(uri);
-
-
-
-
-
-
 
             uploadMemoryTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     Toast.makeText(StoreMemory.this,"An error has occurred. Please try again!",Toast.LENGTH_SHORT).show();
-                    //TODO: Stop progress bar
+                    uploadProgress.setVisibility(View.GONE);
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -203,7 +195,7 @@ public class StoreMemory extends AppCompatActivity {
 
                         Map<String, String> userMap = new HashMap<>();
                         userMap.put("Description", desc);
-                        userMap.put("Image", downloadUrl.toString());
+                        userMap.put("Link", downloadUrl.toString());
                         userMap.put("TimeStamp", currentUNIX);
                         userMap.put("Username", userId);
                         userMap.put("Type", String.valueOf(type));
@@ -220,21 +212,13 @@ public class StoreMemory extends AppCompatActivity {
                                 }else{
                                     String error = task.getException().getMessage();
                                     Toast.makeText(StoreMemory.this,"(FIREBASE Error): "+error,Toast.LENGTH_SHORT).show();
-                                    //TODO: Stop progress bar
+                                    uploadProgress.setVisibility(View.GONE);
                                 }
                             }
                         });
                     }
                 }
             });
-
-
-
-
-
-
-
-
         }
     }
 

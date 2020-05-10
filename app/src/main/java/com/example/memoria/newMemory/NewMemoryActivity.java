@@ -39,10 +39,10 @@ public class NewMemoryActivity extends AppCompatActivity {
     @BindView(R.id.radioGroup) RadioGroup radioGroup;
     @BindView(R.id.newMemoryContinue) Button newMemoryContinue;
 
-    final static int IMAGE_CODE = 1;
-    final static int VIDEO_CODE = 2;
-    final static int AUDIO_CODE = 3;
-    final static int LOCATION_CODE = 4;
+    final public static int IMAGE_CODE = 1;
+    final public static int VIDEO_CODE = 2;
+    final public static int AUDIO_CODE = 3;
+    final public static int LOCATION_CODE = 4;
 
     private FirebaseStorage mStorage;
     private StorageReference storagePath;
