@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                finish();
                             } else {
                                 Log.i("LoginActivity: ", "signInWithEmail:failure", task.getException());
                                 Snackbar.make(v, "Sign-In failed." + task.getException(), Snackbar.LENGTH_LONG).show();
