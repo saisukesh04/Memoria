@@ -3,6 +3,7 @@ package com.example.memoria.adapter;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,15 +122,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     holder.likeCount.setText(dataSnapshot.getChildrenCount() + " Likes");
                 else
                     holder.likeCount.setText("0 Likes");
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
 
-        mRef.child("Memories/" + memoryId + "/Likes").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild(currentUserId)){
                     holder.likeIcon.setImageDrawable(context.getDrawable(R.drawable.like_icon_red));
                 }else{
@@ -138,6 +131,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("Database Error: ", databaseError.getMessage());
             }
         });
 
@@ -159,6 +153,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e("Database Error: ", databaseError.getMessage());
                     }
                 });
             }
