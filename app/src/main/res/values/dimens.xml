@@ -5,4 +5,8 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="recycler_margin">8dp</dimen>
+    <dimen name="profile_image_size">64dp</dimen>
+    <dimen name="layout_height">200dp</dimen>
 </resources>

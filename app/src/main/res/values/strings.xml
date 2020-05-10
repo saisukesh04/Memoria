@@ -36,4 +36,8 @@
     <string name="add_description">Add Description....</string>
     <string name="post_memory">Post Memory</string>
 
+    <string name="upload_date">Upload Date</string>
+    <string name="default_text">lorem ipsum dolor sit amet soluta regione urbanitas vis qui elit populo ut.</string>
+    <string name="default_likes">0 Likes</string>
+
 </resources>

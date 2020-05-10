@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="recycler_margin">16dp</dimen>
+    <dimen name="profile_image_size">70dp</dimen>
+    <dimen name="layout_height">220dp</dimen>
+
+</resources>
