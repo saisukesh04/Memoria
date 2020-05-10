@@ -40,4 +40,9 @@
     <string name="default_text">lorem ipsum dolor sit amet soluta regione urbanitas vis qui elit populo ut.</string>
     <string name="default_likes">0 Likes</string>
 
+    <string name="ad_app_id">ca-app-pub-xxxxxxxxxxxxxxxx~xxxxxxxxxx</string>
+    <string name="banner_ad_id">ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx</string>
+    <string name="banner_ad_id_test">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="interstitial_ad_id">ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx</string>
+    <string name="interstitial_ad_id_test">"ca-app-pub-3940256099942544/1033173712"</string>
 </resources>

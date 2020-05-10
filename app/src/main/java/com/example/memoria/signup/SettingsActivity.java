@@ -22,6 +22,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.memoria.MainActivity;
 import com.example.memoria.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.profileImage) CircleImageView profileImage;
     @BindView(R.id.username) TextInputEditText username;
     @BindView(R.id.saveBtn) Button saveBtn;
+    @BindView(R.id.adView) AdView adView;
 
     private StorageReference storageReference;
     private StorageReference imagePath;
@@ -70,6 +74,9 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         ButterKnife.bind(this);
+
+        MobileAds.initialize(this, getString(R.string.ad_app_id));
+        loadBannerAd();
 
         Intent intent = getIntent();
         boolean firstTime = intent.getBooleanExtra("firstTime", false);
@@ -121,6 +128,11 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void loadBannerAd() {
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     private void storeInFirebase(UploadTask uploadTask,final String userName) {

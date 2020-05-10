@@ -13,6 +13,11 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-xxxxxxxxxxxxxxxx~xxxxxxxxxx"/>
+
         <activity android:name=".newMemory.StoreMemory" />
         <activity android:name=".newMemory.NewMemoryActivity" />
         <activity

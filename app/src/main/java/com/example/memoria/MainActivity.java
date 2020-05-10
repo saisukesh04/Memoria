@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -11,6 +12,9 @@ import android.widget.Toast;
 
 import com.example.memoria.newMemory.NewMemoryActivity;
 import com.example.memoria.signup.SettingsActivity;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     public static Uri mainImageURI = null;
 
     private ProgressDialog loadingProgress;
+    InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +57,26 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         loadingProgress = new ProgressDialog(this);
 
+        mInterstitialAd = new InterstitialAd(this);
+        MobileAds.initialize(this, getString(R.string.ad_app_id));
+        loadInterstitialAd();
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton addMemoryFAB = findViewById(R.id.addMemoryFAB);
         addMemoryFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, NewMemoryActivity.class));
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    Log.i("Advertisement Info: ", "The interstitial ad wasn't loaded yet.");
+                    startActivity(new Intent(MainActivity.this, NewMemoryActivity.class));
+                }
             }
         });
+        runAdActivities();
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -72,6 +88,15 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+    }
+
+    private void loadInterstitialAd() {
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_id_test));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
+    private void runAdActivities() {
+
     }
 
     @Override
