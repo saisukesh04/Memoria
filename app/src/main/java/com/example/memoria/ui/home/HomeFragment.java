@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,9 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
     private DatabaseReference mRef;
+    private List<Memory> listData;
+    private ProgressBar progressBar;
+    private RecyclerView memoryRecyclerView;
     private PostAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -40,9 +44,9 @@ public class HomeFragment extends Fragment {
         mRef = FirebaseDatabase.getInstance().getReference("Memories");
         mRef.keepSynced(true);
 
-        RecyclerView memoryRecyclerView = root.findViewById(R.id.memoryRecyclerView);
+        progressBar = root.findViewById(R.id.progressBar);
+        memoryRecyclerView = root.findViewById(R.id.memoryRecyclerView);
         LinearLayoutManager mLayout = new LinearLayoutManager(getContext());
-        List<Memory> listData = new ArrayList<>();
 
         memoryRecyclerView.setHasFixedSize(true);
         mLayout.setReverseLayout(true);
@@ -62,6 +66,12 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        return root;
+    }
+
+    private void loadMemories() {
+        listData = new ArrayList<>();
+        progressBar.setVisibility(View.VISIBLE);
         mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -70,18 +80,23 @@ public class HomeFragment extends Fragment {
                         String memoryId = data.getKey();
                         Memory memory = data.getValue(Memory.class).withId(memoryId);
                         listData.add(memory);
-                        Log.i("Info: ", String.valueOf(listData.size()));
                     }
                     adapter = new PostAdapter(getContext(), listData);
                     memoryRecyclerView.setAdapter(adapter);
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
             @Override
             public void  onCancelled(DatabaseError databaseError) {
                 Toast.makeText(getContext(),databaseError.getMessage(),Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
+    }
 
-        return root;
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadMemories();
     }
 }
