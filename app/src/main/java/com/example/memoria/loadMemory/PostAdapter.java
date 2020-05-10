@@ -1,18 +1,18 @@
-package com.example.memoria.adapter;
+package com.example.memoria.loadMemory;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -55,10 +55,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private FirebaseAuth mAuth;
     private List<Memory> listData;
     private Context context;
-
-    private SimpleExoPlayer exoPlayer;
-    private MediaSource mediaSource;
-    private TrackSelector trackSelector;
 
     public PostAdapter(Context context, List<Memory> listData) {
         this.context = context;
@@ -108,7 +104,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             Glide.with(context).load(uri).into(holder.memoryImage);
         }else if(type == VIDEO_CODE){
             holder.memoryVideo.setVisibility(View.VISIBLE);
-            playVideo(uri, holder.memoryVideo);
+            playVideo(uri, holder.memoryVideo, context);
         }else if(type == AUDIO_CODE){
             Toast.makeText(context, "Page Under Construction",Toast.LENGTH_LONG).show();
         }else if(type == LOCATION_CODE){
@@ -158,18 +154,29 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 });
             }
         });
+
+        holder.commentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent commentIntent = new Intent(context, CommentActivity.class);
+                commentIntent.putExtra("Uri", uri.toString());
+                commentIntent.putExtra("type", type);
+                commentIntent.putExtra("memoryId", memoryId);
+                context.startActivity(commentIntent);
+            }
+        });
     }
 
-    private void playVideo(Uri uri, SimpleExoPlayerView memoryVideo) {
-        trackSelector = new DefaultTrackSelector();
+    static void playVideo(Uri uri, SimpleExoPlayerView memoryVideo, Context playContext) {
+        TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
-        exoPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
+        SimpleExoPlayer exoPlayer = ExoPlayerFactory.newSimpleInstance(playContext, trackSelector, loadControl);
         memoryVideo.setPlayer(exoPlayer);
 
-        String userAgent = Util.getUserAgent(context, "RecipeVideo");
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context, userAgent);
+        String userAgent = Util.getUserAgent(playContext, "MemoryVideo");
+        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(playContext, userAgent);
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-        mediaSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
+        MediaSource mediaSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
         exoPlayer.prepare(mediaSource);
         exoPlayer.setPlayWhenReady(false);
     }
@@ -182,9 +189,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         CircleImageView userProfileImage;
-        TextView username, uploadDate, memoryDescription, likeCount;
+        TextView username, uploadDate, memoryDescription, likeCount, commentsCount;
         ImageView memoryImage ,likeIcon;
         SimpleExoPlayerView memoryVideo;
+        LinearLayout commentLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -197,6 +205,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             memoryVideo = itemView.findViewById(R.id.memoryVideo);
             likeIcon = itemView.findViewById(R.id.likeIcon);
             likeCount = itemView.findViewById(R.id.likeCount);
+            commentLayout = itemView.findViewById(R.id.commentLayout);
+            commentsCount = itemView.findViewById(R.id.commentsCount);
 
         }
     }
