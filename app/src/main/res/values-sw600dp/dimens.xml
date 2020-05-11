@@ -3,4 +3,7 @@
     <dimen name="profile_image_size">90dp</dimen>
     <dimen name="layout_height">300dp</dimen>
 
+    <dimen name="comment_size">17sp</dimen>
+    <dimen name="comment_photo">55dp</dimen>
+    <dimen name="comment_username">24dp</dimen>
 </resources>

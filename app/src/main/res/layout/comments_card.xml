@@ -14,8 +14,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/userDpCom"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/comment_photo"
+            android:layout_height="@dimen/comment_photo"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:src="@drawable/default_profile"
@@ -30,7 +30,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
             android:text="@string/username"
-            android:textSize="20sp"
+            android:textSize="@dimen/comment_username"
             android:textStyle="bold"
             android:textColor="@color/colorPrimaryDark"
             app:layout_constraintStart_toEndOf="@+id/userDpCom"
@@ -44,11 +44,13 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="24dp"
+            android:paddingBottom="8dp"
             android:text="@string/default_text"
             android:textColor="@color/Black"
+            android:textSize="@dimen/comment_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/usernameCom" />
+            app:layout_constraintTop_toBottomOf="@+id/userDpCom" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

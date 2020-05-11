@@ -165,6 +165,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 context.startActivity(commentIntent);
             }
         });
+
+        mRef.child("Memories/" + memoryId + "/Comments").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChildren())
+                    holder.commentsCount.setText(dataSnapshot.getChildrenCount() + " Comments");
+                else
+                    holder.commentsCount.setText("0 Comments");
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("Database Error: ", databaseError.getMessage());
+            }
+        });
     }
 
     static void playVideo(Uri uri, SimpleExoPlayerView memoryVideo, Context playContext) {

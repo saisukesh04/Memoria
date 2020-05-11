@@ -9,4 +9,8 @@
     <dimen name="recycler_margin">8dp</dimen>
     <dimen name="profile_image_size">64dp</dimen>
     <dimen name="layout_height">200dp</dimen>
+
+    <dimen name="comment_size">14sp</dimen>
+    <dimen name="comment_photo">40dp</dimen>
+    <dimen name="comment_username">20sp</dimen>
 </resources>
