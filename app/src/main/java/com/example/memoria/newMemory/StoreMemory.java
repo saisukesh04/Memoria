@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -107,9 +109,10 @@ public class StoreMemory extends AppCompatActivity {
                 Glide.with(StoreMemory.this).load(uriFinal).into(imageView);
             }else if(type == VIDEO_CODE){
                 exoPlayerView.setVisibility(View.VISIBLE);
-                playVideo(uriFinal);
+                playVideoAudio(uriFinal);
             }else if(type == AUDIO_CODE){
-                Toast.makeText(StoreMemory.this, "Page Under Construction",Toast.LENGTH_LONG).show();
+                exoPlayerView.setVisibility(View.VISIBLE);
+                playVideoAudio(uriFinal);
             }else if(type == LOCATION_CODE){
                 Toast.makeText(StoreMemory.this, "Page Under Construction",Toast.LENGTH_LONG).show();
             }else{
@@ -141,7 +144,7 @@ public class StoreMemory extends AppCompatActivity {
         }
     }
 
-    private void playVideo(Uri uri) {
+    private void playVideoAudio(Uri uri) {
         trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
         exoPlayer = ExoPlayerFactory.newSimpleInstance(StoreMemory.this, trackSelector, loadControl);
@@ -239,7 +242,7 @@ public class StoreMemory extends AppCompatActivity {
     }
 
     private void releasePlayer() {
-        if(type == VIDEO_CODE) {
+        if(type == VIDEO_CODE || type == AUDIO_CODE) {
             exoPlayer.release();
             exoPlayer = null;
             mediaSource = null;

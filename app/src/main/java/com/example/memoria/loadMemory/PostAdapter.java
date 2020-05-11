@@ -56,6 +56,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private List<Memory> listData;
     private Context context;
 
+    private TrackSelector trackSelector;
+    SimpleExoPlayer exoPlayer;
+    private MediaSource mediaSource;
+
     public PostAdapter(Context context, List<Memory> listData) {
         this.context = context;
         this.listData = listData;
@@ -104,9 +108,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             Glide.with(context).load(uri).into(holder.memoryImage);
         }else if(type == VIDEO_CODE){
             holder.memoryVideo.setVisibility(View.VISIBLE);
-            playVideo(uri, holder.memoryVideo, context);
+            playVideoAudio(uri, holder.memoryVideo, context);
         }else if(type == AUDIO_CODE){
-            Toast.makeText(context, "Page Under Construction",Toast.LENGTH_LONG).show();
+            holder.memoryVideo.setVisibility(View.VISIBLE);
+            playVideoAudio(uri, holder.memoryVideo, context);
         }else if(type == LOCATION_CODE){
             Toast.makeText(context, "Page Under Construction",Toast.LENGTH_LONG).show();
         }
@@ -162,6 +167,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 commentIntent.putExtra("Uri", uri.toString());
                 commentIntent.putExtra("type", type);
                 commentIntent.putExtra("memoryId", memoryId);
+                releasePlayer(type);
                 context.startActivity(commentIntent);
             }
         });
@@ -181,18 +187,27 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         });
     }
 
-    static void playVideo(Uri uri, SimpleExoPlayerView memoryVideo, Context playContext) {
-        TrackSelector trackSelector = new DefaultTrackSelector();
+    private void playVideoAudio(Uri uri, SimpleExoPlayerView memoryVideo, Context playContext) {
+        trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
-        SimpleExoPlayer exoPlayer = ExoPlayerFactory.newSimpleInstance(playContext, trackSelector, loadControl);
+        exoPlayer = ExoPlayerFactory.newSimpleInstance(playContext, trackSelector, loadControl);
         memoryVideo.setPlayer(exoPlayer);
 
         String userAgent = Util.getUserAgent(playContext, "MemoryVideo");
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(playContext, userAgent);
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-        MediaSource mediaSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
+        mediaSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
         exoPlayer.prepare(mediaSource);
         exoPlayer.setPlayWhenReady(false);
+    }
+
+    private void releasePlayer(int type){
+        if(type == VIDEO_CODE || type == AUDIO_CODE) {
+            exoPlayer.release();
+            exoPlayer = null;
+            mediaSource = null;
+            trackSelector = null;
+        }
     }
 
     @Override

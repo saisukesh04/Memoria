@@ -69,7 +69,7 @@ public class NewMemoryActivity extends AppCompatActivity {
                     }else if(selectedId == R.id.radioButton2){
                         selectVideo();
                     }else if(selectedId == R.id.radioButton3){
-                        Toast.makeText(NewMemoryActivity.this, "Page Under Construction", Toast.LENGTH_LONG).show();
+                        selectAudio();
                     }else if(selectedId == R.id.radioButton4){
                         Toast.makeText(NewMemoryActivity.this, "Page Under Construction", Toast.LENGTH_LONG).show();
                     }else{
@@ -94,6 +94,13 @@ public class NewMemoryActivity extends AppCompatActivity {
         startActivityForResult(intent, VIDEO_CODE);
     }
 
+    private void selectAudio() {
+        Intent intent = new Intent();
+        intent.setType("audio/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, AUDIO_CODE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -104,42 +111,20 @@ public class NewMemoryActivity extends AppCompatActivity {
             intent.putExtra("URI", imageUri.toString());
             intent.putExtra("type", IMAGE_CODE);
             startActivity(intent);
-            //uploadUri(imageUri);
         }else if (requestCode == VIDEO_CODE && resultCode == RESULT_OK && data != null) {
             Uri videoUri = data.getData();
             Intent intent = new Intent(NewMemoryActivity.this, StoreMemory.class);
             intent.putExtra("URI", videoUri.toString());
             intent.putExtra("type", VIDEO_CODE);
             startActivity(intent);
-            //uploadUri(videoUri);
+        } else if (requestCode == AUDIO_CODE && resultCode == RESULT_OK && data != null) {
+            Uri audioUri = data.getData();
+            Intent intent = new Intent(NewMemoryActivity.this, StoreMemory.class);
+            intent.putExtra("URI", audioUri.toString());
+            intent.putExtra("type", AUDIO_CODE);
+            startActivity(intent);
         } else {
             Toast.makeText(NewMemoryActivity.this, "Please select a file", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void uploadUri(Uri uri) {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setTitle("Uploading File...");
-        storagePath = mStorage.getReference().child("Memories");
-
-        storagePath.child(String.valueOf(System.currentTimeMillis())).putFile(uri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        String url = storagePath.getDownloadUrl().toString();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(NewMemoryActivity.this, "File has not uploaded.", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-
-            }
-        });
-
     }
 }

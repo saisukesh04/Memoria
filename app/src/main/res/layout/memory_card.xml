@@ -80,6 +80,8 @@
                 android:layout_marginEnd="3dp"
                 android:paddingTop="1dp"
                 android:paddingBottom="1dp"
+                android:background="@color/Black"
+                app:default_artwork="@drawable/default_audio"
                 android:visibility="gone"/>
 
         </RelativeLayout>
