@@ -51,7 +51,7 @@
             app:layout_constraintTop_toBottomOf="@+id/username"
             android:layout_marginLeft="16dp" />
 
-        <RelativeLayout
+        <ImageView
             android:id="@+id/memoryLayout"
             android:layout_width="0dp"
             android:layout_height="@dimen/layout_height"
@@ -60,31 +60,25 @@
             android:layout_marginStart="3dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="3dp"
+            app:srcCompat="@drawable/default_audio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userProfileImage">
+            app:layout_constraintTop_toBottomOf="@+id/userProfileImage" />
 
-            <ImageView
-                android:id="@+id/memoryImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#FFFFFF"
-                android:visibility="gone" />
-
-            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-                android:id="@+id/memoryVideo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="3dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="3dp"
-                android:paddingTop="1dp"
-                android:paddingBottom="1dp"
-                android:background="@color/Black"
-                app:default_artwork="@drawable/default_audio"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
+        <ImageView
+            android:id="@+id/videoMessage"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/layout_height"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="3dp"
+            android:alpha="0.7"
+            android:src="@drawable/play_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/userProfileImage" />
 
         <TextView
             android:id="@+id/memoryDescription"
