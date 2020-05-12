@@ -1,5 +1,6 @@
 package com.example.memoria.loadMemory;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -58,6 +59,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull PostAdapter.ViewHolder holder, int position) {
         holder.setIsRecyclable(false);
@@ -67,7 +69,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         String currentUserId = mAuth.getCurrentUser().getUid();
         String memoryId = memory.MemoryId;
         String userName = memory.getUsername();
-        Uri uri = Uri.parse(memory.getLink());
+        String uriStr = memory.getLink();
+        Uri uri = Uri.parse(uriStr);
 
         mRef.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -96,10 +99,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             holder.videoMessage.animate().alpha(0.25f).setDuration(3000);
             holder.memoryLayout.setBackgroundColor(R.color.Black);
         } else if (type == LOCATION_CODE) {
-            Toast.makeText(context, "Page Under Construction", Toast.LENGTH_LONG).show();
+            holder.videoMessage.setVisibility(View.INVISIBLE);
+//            StaticMap map = new StaticMap().center("NYC").size(320, 240);
+//            load(map.toURL()); // load into your image view
         }
 
         mRef.child("Memories/" + memoryId + "/Likes").addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NewApi")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChildren())
@@ -124,6 +130,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 mRef.child("Memories/" + memoryId + "/Likes").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @SuppressLint("NewApi")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChild(currentUserId)) {

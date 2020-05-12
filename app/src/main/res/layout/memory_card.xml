@@ -65,6 +65,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/userProfileImage" />
 
+        <FrameLayout
+            android:id="@+id/mapCardLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/layout_height"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/userProfileImage"
+            android:visibility="gone"/>
+
         <ImageView
             android:id="@+id/videoMessage"
             android:layout_width="0dp"

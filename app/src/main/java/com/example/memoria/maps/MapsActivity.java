@@ -6,10 +6,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -19,9 +21,9 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.example.memoria.R;
+import com.example.memoria.newMemory.StoreMemory;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,10 +31,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.concurrent.TimeUnit;
-
-import static android.os.SystemClock.sleep;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener{
 
@@ -57,6 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         pDialog.show();
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -84,7 +83,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        finish();
+                        Intent intent = new Intent(MapsActivity.this, StoreMemory.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("marker", userLoc);
+                        intent.putExtra("bundle", bundle);
+                        startActivity(intent);
                     }
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
@@ -150,7 +153,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                finish();
+                Intent intent = new Intent(MapsActivity.this, StoreMemory.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("marker", latLng);
+                intent.putExtra("bundle", bundle);
+                startActivity(intent);
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override

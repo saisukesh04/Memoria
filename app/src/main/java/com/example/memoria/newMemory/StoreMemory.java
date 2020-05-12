@@ -35,11 +35,18 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -58,18 +65,23 @@ import static com.example.memoria.newMemory.NewMemoryActivity.IMAGE_CODE;
 import static com.example.memoria.newMemory.NewMemoryActivity.LOCATION_CODE;
 import static com.example.memoria.newMemory.NewMemoryActivity.VIDEO_CODE;
 
-public class StoreMemory extends AppCompatActivity {
+public class StoreMemory extends AppCompatActivity implements OnMapReadyCallback {
 
     @BindView(R.id.memoryVideoView) PlayerView exoPlayerView;
     @BindView(R.id.memoryImageView) ImageView imageView;
     @BindView(R.id.memoryDesc) EditText memoryDesc;
     @BindView(R.id.postButton) Button postButton;
+    @BindView(R.id.mapLayout) LinearLayout mapLayout;
 
     private int type;
+    private float size;
+    private String uriStr;
+    LatLng marker;
     Uri uriFinal;
     SimpleExoPlayer exoPlayer;
     MediaSource mediaSource;
     TrackSelector trackSelector;
+    GoogleMap googleMap;
 
     private StorageReference storageReference;
     private FirebaseAuth mAuth;
@@ -91,30 +103,42 @@ public class StoreMemory extends AppCompatActivity {
         userId = mAuth.getCurrentUser().getUid();
 
         Intent intent = getIntent();
-        String uriStr = intent.getStringExtra("URI");
-        type = intent.getIntExtra("type", 0);
+        uriStr = intent.getStringExtra("URI");
+        type = intent.getIntExtra("type", LOCATION_CODE);
         Log.i("Info: ", "Type" + type);
-        uriFinal = Uri.parse(uriStr);
 
-        float size = Float.parseFloat(getSizeFromUri(getApplicationContext(), uriFinal))/(1024*1024);
+        Bundle bundle = getIntent().getParcelableExtra("bundle");
+        if(type == LOCATION_CODE) {
+            marker = bundle.getParcelable("marker");
+            mapLayout.setVisibility(View.VISIBLE);
+        }
 
-        if(size > 10) {
+        if (type != LOCATION_CODE) {
+            uriFinal = Uri.parse(uriStr);
+            size = Float.parseFloat(getSizeFromUri(getApplicationContext(), uriFinal)) / (1024 * 1024);
+        } else {
+            size = 0;
+            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapFragment);
+            mapFragment.getMapAsync(this);
+        }
+
+        if (size > 10) {
             Toast.makeText(this, "Size of the file exceeds 10MB !", Toast.LENGTH_LONG).show();
             finish();
-        }else{
-            if(type == IMAGE_CODE){
+        } else {
+            if (type == IMAGE_CODE) {
                 imageView.setVisibility(View.VISIBLE);
                 Glide.with(StoreMemory.this).load(uriFinal).into(imageView);
-            }else if(type == VIDEO_CODE){
+            } else if (type == VIDEO_CODE) {
                 exoPlayerView.setVisibility(View.VISIBLE);
                 playVideoAudio(uriFinal);
-            }else if(type == AUDIO_CODE){
+            } else if (type == AUDIO_CODE) {
                 exoPlayerView.setVisibility(View.VISIBLE);
                 playVideoAudio(uriFinal);
-            }else if(type == LOCATION_CODE){
-                Toast.makeText(StoreMemory.this, "Page Under Construction",Toast.LENGTH_LONG).show();
-            }else{
-                Toast.makeText(StoreMemory.this, "An error has occurred. Please try again",Toast.LENGTH_LONG).show();
+            } else if (type == LOCATION_CODE) {
+                uriStr = marker.latitude + "," + marker.longitude;
+            } else {
+                Toast.makeText(StoreMemory.this, "An error has occurred. Please try again", Toast.LENGTH_LONG).show();
                 finish();
             }
         }
@@ -122,15 +146,32 @@ public class StoreMemory extends AppCompatActivity {
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadMemory(uriFinal);
+                String desc = memoryDesc.getText().toString();
+                if(!TextUtils.isEmpty(desc)){
+                    if(type != LOCATION_CODE)
+                        uploadMemory(uriFinal, desc);
+                    else
+                        uploadLocationMemory(uriStr, desc);
+                }else{
+                    Snackbar.make(v, "Give a description of the memory", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
+        googleMap.getUiSettings().setRotateGesturesEnabled(false);
+        googleMap.getUiSettings().setScrollGesturesEnabled(false);
+        googleMap.addMarker(new MarkerOptions().position(marker).title("Your Location")).showInfoWindow();
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 10));
     }
 
     private String getSizeFromUri(Context context, Uri uri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Audio.Media.SIZE };
+            String[] proj = {MediaStore.Audio.Media.SIZE};
             cursor = context.getContentResolver().query(uri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE);
             cursor.moveToFirst();
@@ -156,71 +197,101 @@ public class StoreMemory extends AppCompatActivity {
         exoPlayer.setPlayWhenReady(true);
     }
 
-    private void uploadMemory(Uri uri) {
+    private void uploadMemory(Uri uri, String desc) {
 
         LinearLayout uploadProgress = findViewById(R.id.uploadProgress);
-        String desc = memoryDesc.getText().toString();
 
-        if(!TextUtils.isEmpty(desc)) {
-            uploadProgress.setVisibility(View.VISIBLE);
-            String currentUNIX = String.valueOf(System.currentTimeMillis());
-            storagePath = storageReference.child("Memories").child(userId + " " + currentUNIX);
-            UploadTask uploadMemoryTask = storagePath.putFile(uri);
+        uploadProgress.setVisibility(View.VISIBLE);
+        String currentUNIX = String.valueOf(System.currentTimeMillis());
+        storagePath = storageReference.child("Memories").child(userId + " " + currentUNIX);
+        UploadTask uploadMemoryTask = storagePath.putFile(uri);
 
-            uploadMemoryTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(StoreMemory.this,"An error has occurred. Please try again!",Toast.LENGTH_SHORT).show();
+        uploadMemoryTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(StoreMemory.this, "An error has occurred. Please try again!", Toast.LENGTH_SHORT).show();
+                uploadProgress.setVisibility(View.GONE);
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.i("StoreMemory: ", "Memory Upload Successful");
+            }
+        });
+        uploadMemoryTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                return storagePath.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    downloadUrl = task.getResult();
+                    Log.i("StoreMemory:", "The Memory URL :" + downloadUrl.toString());
+
+                    Map<String, String> userMap = new HashMap<>();
+                    userMap.put("Description", desc);
+                    userMap.put("Link", downloadUrl.toString());
+                    userMap.put("TimeStamp", currentUNIX);
+                    userMap.put("Username", userId);
+                    userMap.put("Type", String.valueOf(type));
+
+                    mRef.child("Memories").child(currentUNIX).setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+
+                                Toast.makeText(StoreMemory.this, "Memory Uploaded", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(StoreMemory.this, MainActivity.class));
+                                finish();
+
+                            } else {
+                                String error = task.getException().getMessage();
+                                Toast.makeText(StoreMemory.this, "(FIREBASE Error): " + error, Toast.LENGTH_SHORT).show();
+                                uploadProgress.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void uploadLocationMemory(String uriStr, String desc) {
+
+        LinearLayout uploadProgress = findViewById(R.id.uploadProgress);
+
+        uploadProgress.setVisibility(View.VISIBLE);
+        String currentUNIX = String.valueOf(System.currentTimeMillis());
+        storagePath = storageReference.child("Memories").child(userId + " " + currentUNIX);
+
+        Map<String, String> userMap = new HashMap<>();
+        userMap.put("Description", desc);
+        userMap.put("Link", uriStr);
+        userMap.put("TimeStamp", currentUNIX);
+        userMap.put("Username", userId);
+        userMap.put("Type", String.valueOf(type));
+
+        mRef.child("Memories").child(currentUNIX).setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+
+                    Toast.makeText(StoreMemory.this, "Memory Uploaded", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(StoreMemory.this, MainActivity.class));
+                    finish();
+
+                } else {
+                    String error = task.getException().getMessage();
+                    Toast.makeText(StoreMemory.this, "(FIREBASE Error): " + error, Toast.LENGTH_SHORT).show();
                     uploadProgress.setVisibility(View.GONE);
                 }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.i("StoreMemory: ","Memory Upload Successful");
-                }
-            });
-            uploadMemoryTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if(!task.isSuccessful()){
-                        throw task.getException();
-                    }
-                    return storagePath.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()){
-                        downloadUrl = task.getResult();
-                        Log.i("StoreMemory:","The Memory URL :"+downloadUrl.toString());
-
-                        Map<String, String> userMap = new HashMap<>();
-                        userMap.put("Description", desc);
-                        userMap.put("Link", downloadUrl.toString());
-                        userMap.put("TimeStamp", currentUNIX);
-                        userMap.put("Username", userId);
-                        userMap.put("Type", String.valueOf(type));
-
-                        mRef.child("Memories").child(currentUNIX).setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-
-                                    Toast.makeText(StoreMemory.this,"Memory Uploaded",Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(StoreMemory.this, MainActivity.class));
-                                    finish();
-
-                                }else{
-                                    String error = task.getException().getMessage();
-                                    Toast.makeText(StoreMemory.this,"(FIREBASE Error): "+error,Toast.LENGTH_SHORT).show();
-                                    uploadProgress.setVisibility(View.GONE);
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        }
+            }
+        });
     }
 
     @Override
@@ -240,7 +311,7 @@ public class StoreMemory extends AppCompatActivity {
     }
 
     private void releasePlayer() {
-        if(type == VIDEO_CODE || type == AUDIO_CODE) {
+        if (type == VIDEO_CODE || type == AUDIO_CODE) {
             exoPlayer.release();
             exoPlayer = null;
             mediaSource = null;
