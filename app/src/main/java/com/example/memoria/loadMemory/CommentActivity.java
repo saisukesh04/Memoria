@@ -9,11 +9,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -33,6 +35,12 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,7 +61,7 @@ import static com.example.memoria.newMemory.NewMemoryActivity.IMAGE_CODE;
 import static com.example.memoria.newMemory.NewMemoryActivity.LOCATION_CODE;
 import static com.example.memoria.newMemory.NewMemoryActivity.VIDEO_CODE;
 
-public class CommentActivity extends AppCompatActivity {
+public class CommentActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     @BindView(R.id.commentRecyclerView) RecyclerView commentRecyclerView;
     @BindView(R.id.commentEdit) EditText commentEdit;
@@ -61,11 +69,15 @@ public class CommentActivity extends AppCompatActivity {
     @BindView(R.id.commentImage) ImageView commentImage;
     @BindView(R.id.commentPlayer) SimpleExoPlayerView commentPlayer;
     @BindView(R.id.commentProgress) ProgressBar progressBar;
+    @BindView(R.id.mapLayoutComment) LinearLayout mapLayoutComment;
 
     private DatabaseReference mRef;
     private FirebaseAuth mAuth;
     private CommentsAdapter adapter;
     int type;
+    GoogleMap googleMap;
+    LatLng marker;
+    Uri uri;
 
     private TrackSelector trackSelector;
     SimpleExoPlayer exoPlayer;
@@ -81,8 +93,15 @@ public class CommentActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mRef = FirebaseDatabase.getInstance().getReference();
 
-        Uri uri = Uri.parse(getIntent().getStringExtra("Uri"));
         type = getIntent().getIntExtra("type", 0);
+        if(type != LOCATION_CODE)
+            uri = Uri.parse(getIntent().getStringExtra("Uri"));
+        else {
+            String[] latlong =  getIntent().getStringExtra("Uri").split(",");
+            double latitude = Double.parseDouble(latlong[0]);
+            double longitude = Double.parseDouble(latlong[1]);
+            marker = new LatLng(latitude, longitude);
+        }
         String memoryId = getIntent().getStringExtra("memoryId");
 
         if(type == IMAGE_CODE){
@@ -95,19 +114,27 @@ public class CommentActivity extends AppCompatActivity {
             commentPlayer.setVisibility(View.VISIBLE);
             playVideoAudio(uri, CommentActivity.this);
         }else if(type == LOCATION_CODE){
-            Toast.makeText(CommentActivity.this, "Page Under Construction",Toast.LENGTH_LONG).show();
+            mapLayoutComment.setVisibility(View.VISIBLE);
+
+            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapFragmentComment);
+            mapFragment.getMapAsync(this);
         }
 
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, String> commentMap = new HashMap<>();
-                commentMap.put("comment", commentEdit.getText().toString());
-                commentMap.put("username", mAuth.getCurrentUser().getUid());
-                mRef.child("Memories/" + memoryId + "/Comments")
-                        .child(String.valueOf(System.currentTimeMillis()))
-                        .setValue(commentMap);
-                commentEdit.setText("");
+                String comment = commentEdit.getText().toString();
+                if(!TextUtils.isEmpty(comment)) {
+                    Map<String, String> commentMap = new HashMap<>();
+                    commentMap.put("comment", comment);
+                    commentMap.put("username", mAuth.getCurrentUser().getUid());
+                    mRef.child("Memories/" + memoryId + "/Comments")
+                            .child(String.valueOf(System.currentTimeMillis()))
+                            .setValue(commentMap);
+                    commentEdit.setText("");
+                }else{
+                    Toast.makeText(CommentActivity.this, "Empty Comment", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -135,6 +162,15 @@ public class CommentActivity extends AppCompatActivity {
                 Log.e("Database Error: ", databaseError.getMessage());
             }
         });
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
+        googleMap.getUiSettings().setRotateGesturesEnabled(false);
+        googleMap.addMarker(new MarkerOptions().position(marker).title("Memory Location")).showInfoWindow();
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 10));
     }
 
     private void playVideoAudio(Uri uri, Context playContext) {

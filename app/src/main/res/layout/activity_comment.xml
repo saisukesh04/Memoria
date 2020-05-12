@@ -68,6 +68,24 @@
                 app:default_artwork="@drawable/default_audio"
                 android:visibility="gone" />
 
+            <LinearLayout
+                android:id="@+id/mapLayoutComment"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:visibility="gone">
+
+                <fragment
+                    android:id="@+id/mapFragmentComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:name="com.google.android.gms.maps.MapFragment" />
+            </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/commentRecyclerView"
                 android:layout_width="match_parent"

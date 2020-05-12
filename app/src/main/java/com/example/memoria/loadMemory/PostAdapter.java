@@ -155,14 +155,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.commentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToComments(uri, type, memoryId);
+                goToComments(uriStr, type, memoryId);
             }
         });
 
         holder.memoryLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToComments(uri, type, memoryId);
+                goToComments(uriStr, type, memoryId);
             }
         });
 
@@ -182,9 +182,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         });
     }
 
-    private void goToComments(Uri uri, int type, String memoryId) {
+    private void goToComments(String uri, int type, String memoryId) {
         Intent commentIntent = new Intent(context, CommentActivity.class);
-        commentIntent.putExtra("Uri", uri.toString());
+        commentIntent.putExtra("Uri", uri);
         commentIntent.putExtra("type", type);
         commentIntent.putExtra("memoryId", memoryId);
         context.startActivity(commentIntent);
