@@ -13,12 +13,12 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        
+
         <activity android:name=".loadMemory.CommentActivity"></activity>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-5473683288487639~1224282993" />
+            android:value="ca-app-pub-xxxxxxxxxxxxxxxx~xxxxxxxxxx" />
 
         <activity android:name=".newMemory.StoreMemory" />
         <activity android:name=".newMemory.NewMemoryActivity" />

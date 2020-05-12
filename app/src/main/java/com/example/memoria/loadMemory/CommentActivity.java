@@ -127,8 +127,8 @@ public class CommentActivity extends AppCompatActivity {
                     }
                     adapter = new CommentsAdapter(CommentActivity.this, listData);
                     commentRecyclerView.setAdapter(adapter);
-                    progressBar.setVisibility(View.INVISIBLE);
                 }
+                progressBar.setVisibility(View.INVISIBLE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

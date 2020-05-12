@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.memoria.newMemory.NewMemoryActivity;
 import com.example.memoria.signup.SettingsActivity;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
@@ -75,7 +76,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        runAdActivities();
+
+        mInterstitialAd.setAdListener(new AdListener(){
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                Log.e("Error", "Loading Advertisement");
+            }
+
+            @Override
+            public void onAdClosed() {
+                startActivity(new Intent(MainActivity.this, NewMemoryActivity.class));
+            }
+        });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -93,10 +105,6 @@ public class MainActivity extends AppCompatActivity {
     private void loadInterstitialAd() {
         mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_id_test));
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
-    }
-
-    private void runAdActivities() {
-
     }
 
     @Override
