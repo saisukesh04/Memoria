@@ -19,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.memoria.R;
+import com.example.memoria.maps.MapsActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -71,7 +72,7 @@ public class NewMemoryActivity extends AppCompatActivity {
                     }else if(selectedId == R.id.radioButton3){
                         selectAudio();
                     }else if(selectedId == R.id.radioButton4){
-                        Toast.makeText(NewMemoryActivity.this, "Page Under Construction", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(NewMemoryActivity.this, MapsActivity.class));
                     }else{
                         Snackbar.make(v, "Please choose any one of the options", Snackbar.LENGTH_LONG).show();
                     }
