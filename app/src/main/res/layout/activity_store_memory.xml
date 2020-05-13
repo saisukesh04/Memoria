@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mainBackground"
     tools:context=".newMemory.StoreMemory">
 
     <androidx.appcompat.widget.Toolbar
@@ -13,7 +12,6 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:title="Add New Memory"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +68,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            app:hintTextColor="@color/colorPrimaryDark"
             android:layout_marginEnd="8dp">
 
             <EditText
@@ -79,7 +76,6 @@
                 android:layout_height="115dp"
                 android:ems="10"
                 android:hint="@string/add_description"
-                android:textColor="@color/textColor"
                 android:inputType="textMultiLine"
                 android:maxLength="200" />
         </com.google.android.material.textfield.TextInputLayout>

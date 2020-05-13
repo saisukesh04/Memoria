@@ -50,5 +50,4 @@
     <string name="comment_hint">Comment...</string>
     <string name="submit_comment">Send Comment</string>
     <string name="title_activity_maps">Map</string>
-    <string name="action_mode">Change Mode</string>
 </resources>

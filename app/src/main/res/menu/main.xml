@@ -6,11 +6,6 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_change_mode"
-        android:title="@string/action_mode"
-        android:icon="@drawable/night_mode"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/action_logout"
         android:title="@string/menu_logout"
         app:showAsAction="never"/>
