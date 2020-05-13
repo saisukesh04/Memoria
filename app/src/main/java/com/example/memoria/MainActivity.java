@@ -8,8 +8,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.memoria.newMemory.NewMemoryActivity;
 import com.example.memoria.signup.SettingsActivity;
 import com.google.android.gms.ads.AdListener;
@@ -43,10 +46,14 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     public static FirebaseAuth mAuth;
     private DatabaseReference mRef;
-    public String userId = null;
+    public static String userId = null;
     public static String userName;
     public static String mainProfileImage;
     public static Uri mainImageURI = null;
+
+    private ImageView img;
+    private TextView textHeader;
+    private TextView tv;
 
     private SharedPreferences modeSetting;
     private SharedPreferences.Editor modeEdit;
@@ -112,6 +119,11 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        View navView =  navigationView.inflateHeaderView(R.layout.nav_header_main);
+        img = navView.findViewById(R.id.imageViewNav);
+        textHeader = navView.findViewById(R.id.navTextHeader);
+        tv = navView.findViewById(R.id.navTextView);
     }
 
     private void loadInterstitialAd() {
@@ -173,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) {
             sendToLogin();
         }else{
-            userId = mAuth.getCurrentUser().getUid();
+            userId = currentUser.getUid();
 
             mRef.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -184,6 +196,9 @@ public class MainActivity extends AppCompatActivity {
                         mainProfileImage = retrieveMap.get("Image");
                         mainImageURI = Uri.parse(mainProfileImage);
                         userName = retrieveMap.get("Name");
+                        Glide.with(MainActivity.this).load(mainImageURI).into(img);
+                        textHeader.setText(userName);
+                        tv.setText(currentUser.getEmail());
                     }else{
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                     }
