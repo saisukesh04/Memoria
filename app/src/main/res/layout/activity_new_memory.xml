@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/mainBackground"
     tools:context=".newMemory.NewMemoryActivity">
 
     <TextView
@@ -13,7 +14,7 @@
         android:layout_marginTop="48dp"
         android:text="@string/new_memory_title"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="28sp"
+        android:textSize="@dimen/title_size"
         android:fontFamily="@font/pacifico"
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,6 +35,8 @@
             android:id="@+id/radioButton1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:buttonTint="@color/colorPrimaryDark"
             android:padding="20dp"
             android:textSize="18sp"
             android:text="@string/radiobutton1" />
@@ -42,6 +45,8 @@
             android:id="@+id/radioButton2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:buttonTint="@color/colorPrimaryDark"
             android:padding="20dp"
             android:textSize="18sp"
             android:text="@string/radiobutton2" />
@@ -50,6 +55,8 @@
             android:id="@+id/radioButton3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:buttonTint="@color/colorPrimaryDark"
             android:padding="20dp"
             android:textSize="18sp"
             android:text="@string/radiobutton3" />
@@ -58,6 +65,8 @@
             android:id="@+id/radioButton4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:buttonTint="@color/colorPrimaryDark"
             android:padding="20dp"
             android:textSize="18sp"
             android:text="@string/radiobutton4" />
@@ -71,6 +80,7 @@
         android:background="@color/colorAccent"
         android:padding="20dp"
         android:text="@string/continue_btn_text"
+        android:textColor="@color/textColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />

@@ -10,7 +10,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/mainBackground"
+        android:layout_margin="2dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/userDpCom"
@@ -46,7 +48,7 @@
             android:layout_marginEnd="24dp"
             android:paddingBottom="8dp"
             android:text="@string/default_text"
-            android:textColor="@color/Black"
+            android:textColor="@color/textColor"
             android:textSize="@dimen/comment_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

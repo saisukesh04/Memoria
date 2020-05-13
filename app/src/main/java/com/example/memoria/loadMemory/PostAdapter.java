@@ -100,8 +100,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             holder.memoryLayout.setBackgroundColor(R.color.Black);
         } else if (type == LOCATION_CODE) {
             holder.videoMessage.setVisibility(View.INVISIBLE);
-//            StaticMap map = new StaticMap().center("NYC").size(320, 240);
-//            load(map.toURL()); // load into your image view
+            Glide.with(context).load(R.drawable.default_map).into(holder.memoryLayout);
         }
 
         mRef.child("Memories/" + memoryId + "/Likes").addValueEventListener(new ValueEventListener() {

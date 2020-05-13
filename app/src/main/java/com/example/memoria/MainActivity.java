@@ -1,7 +1,7 @@
 package com.example.memoria;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -47,7 +48,10 @@ public class MainActivity extends AppCompatActivity {
     public static String mainProfileImage;
     public static Uri mainImageURI = null;
 
-    private ProgressDialog loadingProgress;
+    private SharedPreferences modeSetting;
+    private SharedPreferences.Editor modeEdit;
+    private boolean nightMode;
+
     InterstitialAd mInterstitialAd;
 
     @Override
@@ -55,8 +59,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        modeSetting = getSharedPreferences("ModeSetting",0);
+        modeEdit = modeSetting.edit();
+        nightMode = modeSetting.getBoolean("NightMode",false);
+
+        if(nightMode) {
+            Toast.makeText(this, "Dark Mode On", Toast.LENGTH_SHORT).show();
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+
         mAuth = FirebaseAuth.getInstance();
-        loadingProgress = new ProgressDialog(this);
 
         mInterstitialAd = new InterstitialAd(this);
         MobileAds.initialize(this, getString(R.string.ad_app_id));
@@ -120,6 +132,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
 
+            case R.id.action_change_mode:
+                if(!nightMode) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    nightMode = true;
+                    modeEdit.putBoolean("NightMode",true);
+                    modeEdit.apply();
+                }else{
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    nightMode = false;
+                    modeEdit.putBoolean("NightMode",false);
+                    modeEdit.apply();
+                }
+                return true;
+
             case R.id.action_logout:
                 mAuth.signOut();
                 Toast.makeText(this, "You have successfully Signed-out", Toast.LENGTH_SHORT).show();
@@ -141,14 +167,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        loadingProgress.setMessage("Loading...");
-        loadingProgress.show();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         mRef = FirebaseDatabase.getInstance().getReference();
 
         if (currentUser == null) {
             sendToLogin();
-            loadingProgress.dismiss();
         }else{
             userId = mAuth.getCurrentUser().getUid();
 
@@ -161,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
                         mainProfileImage = retrieveMap.get("Image");
                         mainImageURI = Uri.parse(mainProfileImage);
                         userName = retrieveMap.get("Name");
-                        loadingProgress.dismiss();
                     }else{
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                     }
@@ -169,7 +191,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     Toast.makeText(MainActivity.this,"Error" + databaseError,Toast.LENGTH_SHORT).show();
-                    loadingProgress.dismiss();
                 }
             });
         }

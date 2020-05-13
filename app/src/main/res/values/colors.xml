@@ -6,4 +6,9 @@
 
     <color name="White">#FFFFFF</color>
     <color name="Black">#000000</color>
+
+    <color name="mainBackground">#FFFFFF</color>
+    <color name="textColor">#000000</color>
+    <color name="additional_comment_color">#FFFFFF</color>
+    <color name="hintColor">#808080</color>
 </resources>
