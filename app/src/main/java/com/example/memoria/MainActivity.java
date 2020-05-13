@@ -1,8 +1,11 @@
 package com.example.memoria;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,6 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +34,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -50,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     public static String userName;
     public static String mainProfileImage;
     public static Uri mainImageURI = null;
+    public static long totalMemoriesCount;
 
     private ImageView img;
     private TextView textHeader;
@@ -66,6 +74,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mRef = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+
+        mRef.child("Memories").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                totalMemoriesCount = dataSnapshot.getChildrenCount();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         modeSetting = getSharedPreferences("ModeSetting",0);
         modeEdit = modeSetting.edit();
         nightMode = modeSetting.getBoolean("NightMode",false);
@@ -74,8 +96,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Dark Mode On", Toast.LENGTH_SHORT).show();
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
-
-        mAuth = FirebaseAuth.getInstance();
 
         mInterstitialAd = new InterstitialAd(this);
         MobileAds.initialize(this, getString(R.string.ad_app_id));
@@ -180,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        mRef = FirebaseDatabase.getInstance().getReference();
 
         if (currentUser == null) {
             sendToLogin();
@@ -208,7 +227,38 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this,"Error" + databaseError,Toast.LENGTH_SHORT).show();
                 }
             });
+
+            mRef.child("Memories").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.hasChildren() && totalMemoriesCount < dataSnapshot.getChildrenCount()){
+                        totalMemoriesCount = dataSnapshot.getChildrenCount();
+                        notifications();
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("Database Error: ", databaseError.getMessage());
+                }
+            });
         }
+    }
+
+    public void notifications(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel("1", "Memoria", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
+                .setContentTitle("Memoria")
+                .setSmallIcon(R.mipmap.logo_round)
+                .setAutoCancel(true)
+                .setContentText("New Memory is Uploaded");
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+        managerCompat.notify(0, builder.build());
     }
 
     private void sendToLogin() {

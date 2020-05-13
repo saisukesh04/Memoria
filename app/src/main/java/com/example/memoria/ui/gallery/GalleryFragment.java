@@ -43,7 +43,6 @@ public class GalleryFragment extends Fragment {
         mRef = FirebaseDatabase.getInstance().getReference("Memories");
         mRef.keepSynced(true);
 
-        Toast.makeText(getActivity(), userId, Toast.LENGTH_LONG).show();
         progressBar = root.findViewById(R.id.progressBar2);
         myRecyclerView = root.findViewById(R.id.myRecyclerView);
         LinearLayoutManager mLayout = new LinearLayoutManager(getContext());
