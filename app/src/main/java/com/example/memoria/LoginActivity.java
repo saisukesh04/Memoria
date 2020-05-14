@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.example.memoria.signup.RegisterActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.loginEmail) TextInputEditText loginEmail;
     @BindView(R.id.loginPassword) TextInputEditText loginPassword;
     @BindView(R.id.loginBtn) Button loginBtn;
+    @BindView(R.id.loginProgressBar) ProgressBar progressBar;
 
     private FirebaseAuth mAuth;
 
@@ -59,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
                     Snackbar.make(v, "Please enter all the credentials", Snackbar.LENGTH_LONG).show();
                 }else {
+                    progressBar.setVisibility(View.VISIBLE);
                     mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -69,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.i("LoginActivity: ", "signInWithEmail:failure", task.getException());
                                 Snackbar.make(v, "Sign-In failed." + task.getException(), Snackbar.LENGTH_LONG).show();
                             }
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     });
                 }

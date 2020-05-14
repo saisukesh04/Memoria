@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.example.memoria.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,6 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.regPass) TextInputEditText regPass;
     @BindView(R.id.regConfPass) TextInputEditText regConfPass;
     @BindView(R.id.signUpBtn) Button signUpBtn;
+    @BindView(R.id.regProgressBar) ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }else if (!pass.equals(passConf)){
                     Snackbar.make(v, "Passwords do not match", Snackbar.LENGTH_LONG).show();
                 }else{
+                    progressBar.setVisibility(View.VISIBLE);
                     mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -67,6 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Log.e("RegisterActivity", "createUserWithEmail : failure", task.getException());
                                 Snackbar.make(v, "Authentication failed. \n" + task.getException(), Snackbar.LENGTH_LONG).show();
                             }
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     });
                 }
