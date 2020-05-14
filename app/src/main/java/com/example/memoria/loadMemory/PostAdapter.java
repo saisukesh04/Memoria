@@ -108,9 +108,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChildren())
-                    holder.likeCount.setText(dataSnapshot.getChildrenCount() + " Likes");
+                    holder.likeCount.setText(context.getString(R.string.likes_number, dataSnapshot.getChildrenCount()));
+//                dataSnapshot.getChildrenCount() +
                 else
-                    holder.likeCount.setText("0 Likes");
+                    holder.likeCount.setText(R.string.default_likes);
 
                 if (dataSnapshot.hasChild(currentUserId)) {
                     holder.likeIcon.setImageDrawable(context.getDrawable(R.drawable.like_icon_red));
@@ -169,9 +170,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChildren())
-                    holder.commentsCount.setText(dataSnapshot.getChildrenCount() + " Comments");
+                    holder.commentsCount.setText(context.getString(R.string.comments_count, dataSnapshot.getChildrenCount()));
                 else
-                    holder.commentsCount.setText("0 Comments");
+                    holder.commentsCount.setText(R.string.default_comments);
             }
 
             @Override

@@ -7,5 +7,5 @@
 
     <dimen name="comment_size">17sp</dimen>
     <dimen name="comment_photo">55dp</dimen>
-    <dimen name="comment_username">24dp</dimen>
+    <dimen name="comment_username">24sp</dimen>
 </resources>

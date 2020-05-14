@@ -37,7 +37,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:contentDescription="@string/desc_image_upload" />
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/memoryVideoView"
@@ -81,7 +82,8 @@
                 android:hint="@string/add_description"
                 android:textColor="@color/textColor"
                 android:inputType="textMultiLine"
-                android:maxLength="200" />
+                android:maxLength="200"
+                android:autofillHints="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

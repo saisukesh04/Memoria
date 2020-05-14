@@ -46,7 +46,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/commentsToolbar">
 
-
             <ImageView
                 android:id="@+id/commentImage"
                 android:layout_width="match_parent"
@@ -56,7 +55,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:contentDescription="@string/desc_image_comment" />
 
             <com.google.android.exoplayer2.ui.SimpleExoPlayerView
                 android:id="@+id/commentPlayer"
@@ -116,7 +116,8 @@
                     android:hint="@string/comment_hint"
                     android:inputType="textMultiLine"
                     android:textColor="@color/textColor"
-                    android:maxLength="200" />
+                    android:maxLength="200"
+                    android:autofillHints="tex" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button

@@ -63,7 +63,8 @@
             app:srcCompat="@drawable/default_audio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userProfileImage" />
+            app:layout_constraintTop_toBottomOf="@+id/userProfileImage"
+            android:contentDescription="@string/desc_imageView_memory" />
 
         <ImageView
             android:id="@+id/videoMessage"
@@ -78,7 +79,8 @@
             android:src="@drawable/play_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userProfileImage" />
+            app:layout_constraintTop_toBottomOf="@+id/userProfileImage"
+            android:contentDescription="@null" />
 
         <TextView
             android:id="@+id/memoryDescription"
@@ -104,7 +106,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/memoryDescription"
             app:srcCompat="@drawable/like_icon_grey"
-            android:layout_marginLeft="16dp" />
+            android:layout_marginLeft="16dp"
+            android:contentDescription="@string/like_button" />
 
         <TextView
             android:id="@+id/likeCount"
@@ -126,25 +129,26 @@
             app:layout_constraintTop_toBottomOf="@+id/memoryDescription"
             app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/commentIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="8dp"
-            app:srcCompat="@drawable/ic_comment" />
+            <ImageView
+                android:id="@+id/commentIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="8dp"
+                app:srcCompat="@drawable/ic_comment"
+                android:contentDescription="@null" />
 
-        <TextView
-            android:id="@+id/commentsCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:text="@string/default_comments"
-            android:textColor="@color/colorPrimary"
-            android:layout_gravity="center_vertical" />
+            <TextView
+                android:id="@+id/commentsCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/default_comments"
+                android:textColor="@color/colorPrimary"
+                android:layout_gravity="center_vertical" />
 
         </LinearLayout>
 
