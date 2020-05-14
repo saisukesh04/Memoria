@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
@@ -17,11 +19,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.memoria.R;
+import com.example.memoria.database.CommentsDatabase;
 import com.example.memoria.model.Comment;
+import com.example.memoria.widget.WidgetActivity;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -79,6 +84,9 @@ public class CommentActivity extends AppCompatActivity implements OnMapReadyCall
     LatLng marker;
     Uri uri;
 
+    public static List<Comment> listData;
+    CommentsDatabase mDatabase;
+
     private TrackSelector trackSelector;
     SimpleExoPlayer exoPlayer;
     private MediaSource mediaSource;
@@ -92,6 +100,7 @@ public class CommentActivity extends AppCompatActivity implements OnMapReadyCall
 
         mAuth = FirebaseAuth.getInstance();
         mRef = FirebaseDatabase.getInstance().getReference();
+        mDatabase = CommentsDatabase.getInstance(getApplicationContext());
 
         type = getIntent().getIntExtra("type", 0);
         if(type != LOCATION_CODE)
@@ -124,12 +133,14 @@ public class CommentActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onClick(View v) {
                 String comment = commentEdit.getText().toString();
+                String time = String.valueOf(System.currentTimeMillis());
                 if(!TextUtils.isEmpty(comment)) {
                     Map<String, String> commentMap = new HashMap<>();
                     commentMap.put("comment", comment);
                     commentMap.put("username", mAuth.getCurrentUser().getUid());
+                    commentMap.put("timestamp", time);
                     mRef.child("Memories/" + memoryId + "/Comments")
-                            .child(String.valueOf(System.currentTimeMillis()))
+                            .child(time)
                             .setValue(commentMap);
                     commentEdit.setText("");
                 }else{
@@ -145,7 +156,7 @@ public class CommentActivity extends AppCompatActivity implements OnMapReadyCall
         mRef.child("Memories/" + memoryId + "/Comments").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<Comment> listData = new ArrayList<>();
+                listData = new ArrayList<>();
                 if (dataSnapshot.exists()){
                     for (DataSnapshot data : dataSnapshot.getChildren()){
                         String memoryId = data.getKey();
@@ -154,6 +165,7 @@ public class CommentActivity extends AppCompatActivity implements OnMapReadyCall
                     }
                     adapter = new CommentsAdapter(CommentActivity.this, listData);
                     commentRecyclerView.setAdapter(adapter);
+                    refreshWidgets();
                 }
                 progressBar.setVisibility(View.INVISIBLE);
             }
@@ -185,6 +197,20 @@ public class CommentActivity extends AppCompatActivity implements OnMapReadyCall
         mediaSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
         exoPlayer.prepare(mediaSource);
         exoPlayer.setPlayWhenReady(false);
+    }
+
+    private void refreshWidgets() {
+
+        mDatabase.CommentDao().deleteAll();
+        for (int i = 0; i < listData.size(); i++) {
+            mDatabase.CommentDao().insertComments(listData.get(i));
+        }
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplication());
+        int ids[] = appWidgetManager.getAppWidgetIds(new ComponentName(getApplication(), WidgetActivity.class));
+        appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.list_view_comments);
+
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget_activity);
+        appWidgetManager.partiallyUpdateAppWidget(ids, remoteViews);
     }
 
     @Override

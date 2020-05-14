@@ -14,6 +14,15 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".widget.WidgetActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_activity_info" />
+        </receiver>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -22,7 +31,6 @@
         <activity
             android:name=".maps.MapsActivity"
             android:label="@string/title_activity_maps" />
-
         <activity android:name=".loadMemory.CommentActivity" />
 
         <meta-data

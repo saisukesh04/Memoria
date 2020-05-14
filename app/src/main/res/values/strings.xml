@@ -51,4 +51,6 @@
     <string name="submit_comment">Send Comment</string>
     <string name="title_activity_maps">Map</string>
     <string name="action_mode">Change Mode</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

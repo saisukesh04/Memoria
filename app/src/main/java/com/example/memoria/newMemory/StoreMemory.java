@@ -210,6 +210,7 @@ public class StoreMemory extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onFailure(@NonNull Exception exception) {
                 Toast.makeText(StoreMemory.this, "An error has occurred. Please try again!", Toast.LENGTH_SHORT).show();
+                Log.e("Error: ", exception.getMessage());
                 uploadProgress.setVisibility(View.GONE);
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -231,7 +232,6 @@ public class StoreMemory extends AppCompatActivity implements OnMapReadyCallback
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     downloadUrl = task.getResult();
-                    Log.i("StoreMemory:", "The Memory URL :" + downloadUrl.toString());
 
                     Map<String, String> userMap = new HashMap<>();
                     userMap.put("Description", desc);

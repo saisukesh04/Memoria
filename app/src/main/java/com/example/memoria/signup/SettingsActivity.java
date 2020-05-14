@@ -161,7 +161,6 @@ public class SettingsActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()){
                     downloadUrl = task.getResult();
-                    Log.i("Information SA:","The URL : " + downloadUrl.toString());
 
                     Map<String, String> userMap = new HashMap<>();
                     userMap.put("Name",usernameText);
