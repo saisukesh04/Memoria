@@ -57,4 +57,5 @@
     <string name="like_button">like button</string>
     <string name="likes_number">"%d Likes"</string>
     <string name="comments_count">"%d Comments"</string>
+    <string name="profile_image">profile Image</string>
 </resources>
